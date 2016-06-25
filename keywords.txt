@@ -1,0 +1,39 @@
+#######################################
+# Syntax Coloring Map For CheapStepper
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+CheapStepper	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+setRpm			KEYWORD2
+set4076StepMode	KEYWORD2
+setTotalSteps	KEYWORD2
+move			KEYWORD2
+moveTo			KEYWORD2
+moveDegrees		KEYWORD2
+moveToDegree	KEYWORD2
+moveCW			KEYWORD2
+moveCCW			KEYWORD2
+moveToCW		KEYWORD2
+moveToCCW		KEYWORD2
+moveDegreesCW	KEYWORD2
+moveDegreesCCW	KEYWORD2
+moveToDegreeCW	KEYWORD2
+moveToDegreeCCW	KEYWORD2
+step 			KEYWORD2
+stepCW			KEYWORD2
+stepCCW			KEYWORD2
+getStep			KEYWORD2
+getDelay		KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
