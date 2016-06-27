@@ -65,7 +65,7 @@ public:
 	void newMoveDegrees (bool clockwise, int deg);
 	void newMoveToDegree (bool clockwise, int deg);
 
-	void update();
+	void run();
 	void stop();
 
 	void newMoveCW(int numSteps) { newMove(true, numSteps); }
@@ -81,7 +81,7 @@ public:
 
 	void step (bool clockwise);
 	// move 1 step clockwise or counter-clockwise
-	
+
 	void stepCW () { step (true); } // move 1 step clockwise
 	void stepCCW () { step (false); } // move 1 step counter-clockwise
 

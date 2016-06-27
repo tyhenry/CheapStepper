@@ -135,7 +135,7 @@ void CheapStepper::newMoveToDegree (bool clockwise, int deg){
 	newMoveTo (clockwise, toStep);
 }
 
-void CheapStepper::update(){
+void CheapStepper::run(){
 
 	if (micros() - lastStepTime >= delay) { // if time for step
 		if (stepsLeft > 0) { // clockwise
