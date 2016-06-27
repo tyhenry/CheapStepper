@@ -1,8 +1,9 @@
 /*  CheapStepper.h - 
+	v0.2
 	Library for the 28BYJ-48 stepper motor, using ULN2003 driver board
 	https://arduino-info.wikispaces.com/SmallSteppers
 
-	Library written by Tyler Henry, 6/24/2016
+	Library written by Tyler Henry, 6/2016
 
 	uses 8-step sequence: A-AB-B-BC-C-CD-D-DA
 
@@ -55,10 +56,32 @@ public:
 	void moveToDegreeCW (int deg) { moveToDegree (true, deg); }
 	void moveToDegreeCCW (int deg) { moveToDegree (false, deg); }
 
-	// to do: non-blocking versions of move()
+
+	// non-blocking versions of move()
+	// call update() in loop to keep moving
+
+	void newMove (bool clockwise, int numSteps);
+	void newMoveTo (bool clockwise, int toStep);
+	void newMoveDegrees (bool clockwise, int deg);
+	void newMoveToDegree (bool clockwise, int deg);
+
+	void update();
+	void stop();
+
+	void newMoveCW(int numSteps) { newMove(true, numSteps); }
+	void newMoveCCW(int numSteps) { newMove(false, numSteps); }
+	void newMoveToCW(int toStep) { newMoveTo(true, toStep); }
+	void newMoveToCCW(int toStep) { newMoveTo(false, toStep); }
+	void newMoveDegreesCW(int deg) { newMoveDegrees(true, deg); }
+	void newMoveDegreesCCW(int deg) { newMoveDegrees(false, deg); }
+	void newMoveToDegreeCW(int deg) { newMoveToDegree(true, deg); }
+	void newMoveToDegreeCCW(int deg) { newMoveToDegree(false, deg); }
+
+
 
 	void step (bool clockwise);
 	// move 1 step clockwise or counter-clockwise
+	
 	void stepCW () { step (true); } // move 1 step clockwise
 	void stepCCW () { step (false); } // move 1 step counter-clockwise
 
@@ -85,6 +108,11 @@ private:
 	// high speed (low torque) = 600 ~=  24 rpm
 
 	int seqN = -1; // keeps track of sequence number
+
+	// variables for non-blocking moves:
+	unsigned long lastStepTime; // time in microseconds that last step happened
+	int stepsLeft = 0; // steps left to move, neg for counter-clockwise
+
 };
 
 #endif

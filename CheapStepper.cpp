@@ -1,8 +1,9 @@
 /*  CheapStepper.cpp - 
+	v0.2
 	Library for the 28BYJ-48 stepper motor, using ULN2003 driver board
 	https://arduino-info.wikispaces.com/SmallSteppers
 
-	Library written by Tyler Henry, 6/24/2016
+	Library written by Tyler Henry, 6/2016
 
 	uses 8-step sequence: A-AB-B-BC-C-CD-D-DA
 
@@ -85,7 +86,78 @@ void CheapStepper::moveToDegree (bool clockwise, int deg){
 }
 
 
+// NON-BLOCKING MOVES
+
+void CheapStepper::newMove (bool clockwise, int numSteps){
+
+	// numSteps sign ignored
+	// stepsLeft signed positive if clockwise, neg if ccw
+
+	if (clockwise) stepsLeft = abs(numSteps);
+	else stepsLeft = -1 * abs(numSteps);
+
+	lastStepTime = micros();
+}
+
+void CheapStepper::newMoveTo (bool clockwise, int toStep){
+
+	// keep toStep in 0-(totalSteps-1) range
+	if (toStep >= totalSteps) toStep %= totalSteps;
+	else if (toStep < 0) {
+		toStep %= totalSteps; // returns negative if toStep not multiple of totalSteps
+		if (toStep < 0) toStep += totalSteps; // shift into 0-(totalSteps-1) range
+	}
+
+	if (clockwise) stepsLeft = abs(toStep - stepN);
+	// clockwise: simple diff, always pos
+	else stepsLeft = -1*(totalSteps - abs(toStep - stepN));
+	// counter-clockwise: totalSteps - diff, made neg
+
+	lastStepTime = micros();
+}
+
+void CheapStepper::newMoveDegrees (bool clockwise, int deg){
+
+	int nSteps = (unsigned long) deg * totalSteps / 360;
+	newMove (clockwise, nSteps);
+}
+
+void CheapStepper::newMoveToDegree (bool clockwise, int deg){
+
+	// keep to 0-359 range
+	if (deg >= 360) deg %= 360;
+	else if (deg < 0) {
+		deg %= 360; // returns negative if deg not multiple of 360
+		if (deg < 0) deg += 360; // shift into 0-359 range
+	}
+
+	int toStep = deg * totalSteps / 360;
+	newMoveTo (clockwise, toStep);
+}
+
+void CheapStepper::update(){
+
+	if (micros() - lastStepTime >= delay) { // if time for step
+		if (stepsLeft > 0) { // clockwise
+			stepCW();
+			stepsLeft--;
+		} else if (stepsLeft < 0){ // counter-clockwise
+			stepCCW();
+			stepsLeft++;
+		} 
+
+		lastStepTime = micros();
+	}
+}
+
+void CheapStepper::stop(){
+
+	stepsLeft = 0;
+}
+
+
 void CheapStepper::step(bool clockwise){
+
 	if (clockwise) seqCW();
 	else seqCCW();
 }
