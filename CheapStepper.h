@@ -87,10 +87,19 @@ public:
 
 	int getStep() { return stepN; } // returns current miniStep position
 	int getDelay() { return delay; } // returns current delay (microseconds)
+	int getRpm() { return calcRpm(); } // returns current rpm
+	int getPin(int p) { 
+		if (p<4) return pins[p]; // returns pin #
+		return 0; // default 0
+	} 
 
 private:
 
 	int calcDelay(int rpm); // calcs microsecond step delay for given rpm
+	int calcRpm(int _delay); // calcs rpm for given delay in microseconds
+	int calcRpm(){
+		return calcRpm(delay); // calcs rpm from current delay
+	}
 
 	void seqCW();
 	void seqCCW();

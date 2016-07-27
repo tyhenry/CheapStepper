@@ -178,6 +178,13 @@ int CheapStepper::calcDelay (int rpm){
 
 }
 
+int CheapStepper::calcRpm (int _delay){
+
+	unsigned long rpm = 60000000 / (unsigned long) _delay / totalSteps;
+	return (int) rpm;
+	
+}
+
 void CheapStepper::seqCW (){
 	seqN++;
 	if (seqN > 7) seqN = 0; // roll over to A seq
