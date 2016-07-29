@@ -58,7 +58,7 @@ public:
 
 
 	// non-blocking versions of move()
-	// call update() in loop to keep moving
+	// call run() in loop to keep moving
 
 	void newMove (bool clockwise, int numSteps);
 	void newMoveTo (bool clockwise, int toStep);
@@ -91,7 +91,8 @@ public:
 	int getPin(int p) { 
 		if (p<4) return pins[p]; // returns pin #
 		return 0; // default 0
-	} 
+	}
+	int getStepsLeft() { return stepsLeft; } // returns steps left in current move
 
 private:
 
