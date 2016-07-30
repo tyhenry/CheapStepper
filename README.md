@@ -6,7 +6,7 @@
 
 [More info on the cheap but decent 28BYJ-48 stepper motor](https://arduino-info.wikispaces.com/SmallSteppers)
 
-![wiring diagram](https://github.com/tyhenry/CheapStepper/blob/master/extras/connections.png?raw=true)
+<img src="https://github.com/tyhenry/CheapStepper/blob/master/extras/connections.png?raw=true" width="400">
 
 ####library info
 uses 8-step sequence: A-AB-B-BC-C-CD-D-DA
