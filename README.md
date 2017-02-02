@@ -41,7 +41,7 @@ It's best to use an external power supply like [this](https://www.adafruit.com/p
 ##Blocking Moves
 _The Arduino sketch "pauses" during move()_
 
-- move (boolean clockwise, int numSteps);
+- move (boolean clockwise, unsigned long numSteps);
 - moveTo (boolean clockwise, int toStep);
 - moveDegrees (boolean clockwise, int degrees);
 - moveToDegree (boolean clockwise, int toDegree);
@@ -51,7 +51,7 @@ _The Arduino sketch "pauses" during move()_
 _The Arduino sketch will continue running during the move.  
 You must call run() on your stepper during loop()_  
 
-- newMove (boolean clockwise, int numSteps);
+- newMove (boolean clockwise, unsigned long numSteps);
 - newMoveTo (boolean clockwise, int toStep);
 - newMoveDegrees (boolean clockwise, int degrees);  
 - newMoveToDegree (boolean clockwise, int toDegree);  
