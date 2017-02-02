@@ -106,6 +106,8 @@ private:
 	void seqCCW();
 	void seq(int seqNum); // send specific sequence num to driver
 
+	void setPinmodes();
+
 	int pins[4] = {8,9,10,11}; // in1, in2, in3, in4
 
 	int stepN = 0; // keeps track of step position

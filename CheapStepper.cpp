@@ -27,9 +27,7 @@
 
 
 CheapStepper::CheapStepper () {
-	for (int pin=0; pin<4; pin++){
-		pinMode(pins[pin], OUTPUT);
-	}
+	setPinmodes();
 }
 
 CheapStepper::CheapStepper (int in1, int in2, int in3, int in4) {
@@ -38,7 +36,7 @@ CheapStepper::CheapStepper (int in1, int in2, int in3, int in4) {
 	pins[1] = in2;
 	pins[2] = in3;
 	pins[3] = in4;
-	CheapStepper();
+	setPinmodes();
 }
 
 void CheapStepper::setRpm (int rpm){
@@ -292,6 +290,12 @@ void CheapStepper::seq (int seqNum){
 		digitalWrite(pins[p], pattern[p]);
 	}
 	delayMicroseconds(delay);
+}
+
+void CheapStepper::setPinmodes(){
+	for (int pin=0; pin<4; pin++){
+		pinMode(pins[pin], OUTPUT);
+	}
 }
 
 
