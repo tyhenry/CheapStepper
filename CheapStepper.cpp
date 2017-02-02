@@ -44,9 +44,9 @@ void CheapStepper::setRpm (int rpm){
 	delay = calcDelay(rpm);
 }
 
-void CheapStepper::move (bool clockwise, int numSteps){
+void CheapStepper::move (bool clockwise, unsigned long numSteps){
 
-	for (int n=0; n<numSteps; n++){
+	for (unsigned long n=0; n<numSteps; n++){
 		step(clockwise);
 	}
 }
@@ -86,7 +86,7 @@ void CheapStepper::moveToDegree (bool clockwise, int deg){
 
 // NON-BLOCKING MOVES
 
-void CheapStepper::newMove (bool clockwise, int numSteps){
+void CheapStepper::newMove (bool clockwise, unsigned long numSteps){
 
 	// numSteps sign ignored
 	// stepsLeft signed positive if clockwise, neg if ccw

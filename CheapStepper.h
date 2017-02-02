@@ -42,13 +42,13 @@ public:
 	// allows custom # of steps (usually 4076)
 
 	// blocking! (pauses arduino until move is done)
-	void move (bool clockwise, int numSteps); // 4096 steps = 1 revolution
+	void move (bool clockwise, unsigned long numSteps); // 4096 steps = 1 revolution
 	void moveTo (bool clockwise, int toStep); // move to specific step position
 	void moveDegrees (bool clockwise, int deg);
 	void moveToDegree (bool clockwise, int deg);
 
-	void moveCW (int numSteps) { move (true, numSteps); }
-	void moveCCW (int numSteps) { move (false, numSteps); }
+	void moveCW (unsigned long numSteps) { move (true, numSteps); }
+	void moveCCW (unsigned long numSteps) { move (false, numSteps); }
 	void moveToCW (int toStep) { moveTo (true, toStep); }
 	void moveToCCW (int toStep) { moveTo (false, toStep); }
 	void moveDegreesCW (int deg) { moveDegrees (true, deg); }
@@ -60,7 +60,7 @@ public:
 	// non-blocking versions of move()
 	// call run() in loop to keep moving
 
-	void newMove (bool clockwise, int numSteps);
+	void newMove (bool clockwise, unsigned long numSteps);
 	void newMoveTo (bool clockwise, int toStep);
 	void newMoveDegrees (bool clockwise, int deg);
 	void newMoveToDegree (bool clockwise, int deg);
@@ -92,7 +92,7 @@ public:
 		if (p<4) return pins[p]; // returns pin #
 		return 0; // default 0
 	}
-	int getStepsLeft() { return stepsLeft; } // returns steps left in current move
+	unsigned long getStepsLeft() { return stepsLeft; } // returns steps left in current move
 
 private:
 
@@ -123,7 +123,7 @@ private:
 
 	// variables for non-blocking moves:
 	unsigned long lastStepTime; // time in microseconds that last step happened
-	int stepsLeft = 0; // steps left to move, neg for counter-clockwise
+	unsigned long stepsLeft = 0; // steps left to move, neg for counter-clockwise
 
 };
 
