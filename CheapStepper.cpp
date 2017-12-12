@@ -27,9 +27,10 @@
 
 
 CheapStepper::CheapStepper () {
-    
-	
-    
+    for (int pin=0; pin<4; pin++){
+        pinMode(pins[pin], OUTPUT);
+        Serial.print(pins[pin]);
+    }
 }
 
 CheapStepper::CheapStepper (int in1, int in2, int in3, int in4) {
@@ -42,10 +43,7 @@ CheapStepper::CheapStepper (int in1, int in2, int in3, int in4) {
     for (int pin=0; pin<4; pin++){
         pinMode(pins[pin], OUTPUT);
         Serial.print(pins[pin]);
-        
     }
-    
-	CheapStepper();
 }
 
 void CheapStepper::setRpm (int rpm){
