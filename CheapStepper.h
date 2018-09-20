@@ -106,7 +106,7 @@ private:
 	void seqCCW();
 	void seq(int seqNum); // send specific sequence num to driver
 
-	int pins[4] = {8,9,10,11}; // in1, in2, in3, in4
+	int pins[4]; // defaults to pins {8,9,10,11} (in1,in2,in3,in4 on the driver board)
 
 	int stepN = 0; // keeps track of step position
 	// 0-4095 (4096 mini-steps / revolution) or maybe 4076...

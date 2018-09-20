@@ -26,19 +26,16 @@
 #include "CheapStepper.h"
 
 
-CheapStepper::CheapStepper () {
+CheapStepper::CheapStepper () : pins({8,9,10,11}) {
 	for (int pin=0; pin<4; pin++){
 		pinMode(pins[pin], OUTPUT);
 	}
 }
 
-CheapStepper::CheapStepper (int in1, int in2, int in3, int in4) {
-
-	pins[0] = in1;
-	pins[1] = in2;
-	pins[2] = in3;
-	pins[3] = in4;
-	CheapStepper();
+CheapStepper::CheapStepper (int in1, int in2, int in3, int in4) : pins({in1,in2,in3,in4}) {
+	for (int pin=0; pin<4; pin++){
+		pinMode(pins[pin], OUTPUT);
+	}
 }
 
 void CheapStepper::setRpm (int rpm){
