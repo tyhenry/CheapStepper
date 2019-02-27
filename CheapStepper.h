@@ -67,6 +67,7 @@ public:
 
 	void run();
 	void stop();
+	void off();
 
 	void newMoveCW(int numSteps) { newMove(true, numSteps); }
 	void newMoveCCW(int numSteps) { newMove(false, numSteps); }
