@@ -159,6 +159,11 @@ void CheapStepper::step(bool clockwise){
 	else seqCCW();
 }
 
+void CheapStepper::off() {
+	for (int p=0; p<4; p++)
+		digitalWrite(pins[p], 0);
+}
+
 
 /////////////
 // PRIVATE //
