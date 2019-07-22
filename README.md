@@ -4,7 +4,7 @@
 #### created by Tyler Henry, 6/2016 ####
 
 
-You can read some more info on the cheap yet worthy 28BYJ-48 stepper motor [here](https://arduino-info.wikispaces.com/SmallSteppers).
+You can read some more info on the cheap yet worthy 28BYJ-48 stepper motor [here](https://arduinoinfo.mywikis.net/wiki/SmallSteppers).
 
 ## Wiring example
 
