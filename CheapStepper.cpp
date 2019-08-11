@@ -175,7 +175,7 @@ int CheapStepper::calcDelay (int rpm){
 	else if (rpm >= 24) return 600; // highest speed
 
 	unsigned long d = 60000000 / (totalSteps* (unsigned long) rpm);
-	// in range: 600-1465 microseconds (24-1 rpm)
+	// in range: 600-1465 microseconds (24-10 rpm)
 	return (int) d;
 
 }

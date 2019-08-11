@@ -115,7 +115,7 @@ private:
 
 	int delay = 900; // microsecond delay between steps
 	// 900 ~= 16.25 rpm
-	// low speed (high torque) = 1465 ~= 1 rpm
+	// low speed (high torque) = 1465 ~= 10 rpm
 	// high speed (low torque) = 600 ~=  24 rpm
 
 	int seqN = -1; // keeps track of sequence number
