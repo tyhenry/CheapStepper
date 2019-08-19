@@ -62,8 +62,12 @@ public:
 
 	void newMove (bool clockwise, int numSteps);
 	void newMoveTo (bool clockwise, int toStep);
+	// if isInitPosInHalfMove is true, servo will max. move half of round clockwise
+	// and the other half anticlockwise from initial position
+	void newMoveToWithinOneRound (int toStep, bool isInitPosInHalfMove);
 	void newMoveDegrees (bool clockwise, int deg);
 	void newMoveToDegree (bool clockwise, int deg);
+	void newMoveToDegreeWithinOneRound (int deg, bool isInitPosInHalfMove);
 
 	void run();
 	void stop();
