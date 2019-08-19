@@ -62,8 +62,12 @@ public:
 
 	void newMove (bool clockwise, int numSteps);
 	void newMoveTo (bool clockwise, int toStep);
+	// if isInitPosInHalfMove is true, servo will max. move half of round clockwise
+	// and the other half anticlockwise from initial position
+	void newMoveToWithinOneRound (int toStep, bool isInitPosInHalfMove);
 	void newMoveDegrees (bool clockwise, int deg);
 	void newMoveToDegree (bool clockwise, int deg);
+	void newMoveToDegreeWithinOneRound (int deg, bool isInitPosInHalfMove);
 
 	void run();
 	void stop();
@@ -115,7 +119,7 @@ private:
 
 	int delay = 900; // microsecond delay between steps
 	// 900 ~= 16.25 rpm
-	// low speed (high torque) = 1465 ~= 1 rpm
+	// low speed (high torque) = 1465 ~= 10 rpm
 	// high speed (low torque) = 600 ~=  24 rpm
 
 	int seqN = -1; // keeps track of sequence number

@@ -113,6 +113,37 @@ void CheapStepper::newMoveTo (bool clockwise, int toStep){
 	lastStepTime = micros();
 }
 
+void CheapStepper::newMoveToWithinOneRound(int toStep, bool isInitPosInHalfMove) {
+    // keep toStep in 0-(totalSteps-1) range
+    if (toStep >= totalSteps) {
+        toStep %= totalSteps;
+    }
+
+    if (toStep < 0) {
+        toStep = totalSteps + toStep;
+    }
+    // now toStep value is within range 0 - (totalSteps-1)
+
+    if (toStep != stepN) {
+        // if stepN < toStep - we need to move clockwise by diff - stepsLeft has to be positive
+        // if stepN > toStep - we need to move anticlockwise by diff - stepsLeft has to be negative
+        stepsLeft = toStep - stepN;
+
+        if (isInitPosInHalfMove) {
+            // update stepsLeft so center of servo move is in it's initial position
+            int edgeStep = totalSteps / 2;
+            if ((stepN < edgeStep && toStep >= edgeStep) || (stepN >= edgeStep && toStep < edgeStep)) {
+                // correct steps left value ~ "invert" it
+                stepsLeft = stepsLeft > 0 ? -(totalSteps - stepsLeft) : totalSteps + stepsLeft;
+            }
+        }
+    } else {
+        // stepN == toStep - no need to move
+    }
+
+    lastStepTime = micros();
+}
+
 void CheapStepper::newMoveDegrees (bool clockwise, int deg){
 
 	int nSteps = (unsigned long) deg * totalSteps / 360;
@@ -130,6 +161,24 @@ void CheapStepper::newMoveToDegree (bool clockwise, int deg){
 
 	int toStep = deg * totalSteps / 360;
 	newMoveTo (clockwise, toStep);
+}
+
+void CheapStepper::newMoveToDegreeWithinOneRound(int deg, bool isInitPosInHalfMove) {
+    // keep to 0-359 range
+    if (deg >= 360) {
+        deg %= 360;
+    }
+
+    if (deg < 0) {
+        deg = 360 + deg;
+    }
+    // now deg value is within range 0 - 359
+
+    // note that there if overflow for int type
+    long tmp = ((long) deg) * ((long) totalSteps);
+    int toStep = tmp / 360;
+
+    newMoveToWithinOneRound(toStep, isInitPosInHalfMove);
 }
 
 void CheapStepper::run(){
@@ -175,7 +224,7 @@ int CheapStepper::calcDelay (int rpm){
 	else if (rpm >= 24) return 600; // highest speed
 
 	unsigned long d = 60000000 / (totalSteps* (unsigned long) rpm);
-	// in range: 600-1465 microseconds (24-1 rpm)
+	// in range: 600-1465 microseconds (24-10 rpm)
 	return (int) d;
 
 }
