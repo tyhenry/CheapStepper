@@ -105,7 +105,7 @@ private:
 
 	void seqCW();
 	void seqCCW();
-	void seq(int seqNum); // send specific sequence num to driver
+	void seq(byte seqNum); // send specific sequence num to driver
 
 	int pins[4]; // defaults to pins {8,9,10,11} (in1,in2,in3,in4 on the driver board)
 
@@ -118,7 +118,7 @@ private:
 	// low speed (high torque) = 1465 ~= 1 rpm
 	// high speed (low torque) = 600 ~=  24 rpm
 
-	int seqN = -1; // keeps track of sequence number
+	byte seqN = -1; // keeps track of sequence number
 
 	// variables for non-blocking moves:
 	unsigned long lastStepTime; // time in microseconds that last step happened
