@@ -209,91 +209,62 @@ void CheapStepper::seqCCW (){
 	}
 }
 
-void CheapStepper::seq (int seqNum){
+void CheapStepper::seq (byte seqNum){
 
-	int pattern[4];
+	byte pattern;
 	// A,B,C,D HIGH/LOW pattern to write to driver board
-	
-	switch(seqNum){
+
+	switch (seqNum) {
 		case 0:
 		{
-			pattern[0] = 1;
-			pattern[1] = 0;
-			pattern[2] = 0;
-			pattern[3] = 0;
+			pattern = 0b1000;
 			break;
 		}
 		case 1:
 		{
-			pattern[0] = 1;
-			pattern[1] = 1;
-			pattern[2] = 0;
-			pattern[3] = 0;
+			pattern = 0b1100;
 			break;
 		}
 		case 2:
 		{
-			pattern[0] = 0;
-			pattern[1] = 1;
-			pattern[2] = 0;
-			pattern[3] = 0;
+			pattern = 0b0100;
 			break;
 		}
 		case 3:
 		{
-			pattern[0] = 0;
-			pattern[1] = 1;
-			pattern[2] = 1;
-			pattern[3] = 0;
+			pattern = 0b0110;
 			break;
-		}	
+		}
 		case 4:
 		{
-			pattern[0] = 0;
-			pattern[1] = 0;
-			pattern[2] = 1;
-			pattern[3] = 0;
+			pattern = 0b0010;
 			break;
 		}
 		case 5:
 		{
-			pattern[0] = 0;
-			pattern[1] = 0;
-			pattern[2] = 1;
-			pattern[3] = 1;
+			pattern = 0b0011;
 			break;
 		}
 		case 6:
 		{
-			pattern[0] = 0;
-			pattern[1] = 0;
-			pattern[2] = 0;
-			pattern[3] = 1;
+			pattern = 0b0001;
 			break;
 		}
 		case 7:
 		{
-			pattern[0] = 1;
-			pattern[1] = 0;
-			pattern[2] = 0;
-			pattern[3] = 1;
+			pattern = 0b1001;
 			break;
 		}
 		default:
 		{
-			pattern[0] = 0;
-			pattern[1] = 0;
-			pattern[2] = 0;
-			pattern[3] = 0;
+			pattern = 0b000;
 			break;
 		}
 	}
 
 	// write pattern to pins
 	for (int p=0; p<4; p++){
-		digitalWrite(pins[p], pattern[p]);
+		digitalWrite(pins[p], (pattern & (1 << 3-p)) >> 3-p);
 	}
 	delayMicroseconds(delay);
 }
-
-
