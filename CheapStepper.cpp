@@ -211,10 +211,56 @@ void CheapStepper::seqCCW (){
 
 void CheapStepper::seq (byte seqNum){
 
+	byte pattern;
 	// A,B,C,D HIGH/LOW pattern to write to driver board
-	byte pattern[] = {0b1000, 0b1100, 0b0100, 0b0110, 0b0010, 0b0011, 0b0001, 0b1001, 0b0000};
-	
-	if(seqNum < 0 || seqNum > 8) seqNum = 8;
+
+	switch (seqNum) {
+		case 0:
+		{
+			pattern = 0b1000;
+			break;
+		}
+		case 1:
+		{
+			pattern = 0b1100;
+			break;
+		}
+		case 2:
+		{
+			pattern = 0b0100;
+			break;
+		}
+		case 3:
+		{
+			pattern = 0b0110;
+			break;
+		}
+		case 4:
+		{
+			pattern = 0b0010;
+			break;
+		}
+		case 5:
+		{
+			pattern = 0b0011;
+			break;
+		}
+		case 6:
+		{
+			pattern = 0b0001;
+			break;
+		}
+		case 7:
+		{
+			pattern = 0b1001;
+			break;
+		}
+		default:
+		{
+			pattern = 0b000;
+			break;
+		}
+	}
 
 	// write pattern to pins
 	for (int p=0; p<4; p++){
@@ -222,5 +268,3 @@ void CheapStepper::seq (byte seqNum){
 	}
 	delayMicroseconds(delay);
 }
-
-
