@@ -136,10 +136,10 @@ void CheapStepper::run(){
 
 	if (micros() - lastStepTime >= delay) { // if time for step
 		if (stepsLeft > 0) { // clockwise
-			stepCW();
+			stepCW(false);
 			stepsLeft--;
 		} else if (stepsLeft < 0){ // counter-clockwise
-			stepCCW();
+			stepCCW(false);
 			stepsLeft++;
 		} 
 
@@ -153,10 +153,13 @@ void CheapStepper::stop(){
 }
 
 
-void CheapStepper::step(bool clockwise){
+void CheapStepper::step(bool clockwise, bool block){
 
 	if (clockwise) seqCW();
 	else seqCCW();
+	if(block) {
+		delayMicroseconds(delay);
+	}
 }
 
 void CheapStepper::off() {
@@ -293,7 +296,6 @@ void CheapStepper::seq (int seqNum){
 	for (int p=0; p<4; p++){
 		digitalWrite(pins[p], pattern[p]);
 	}
-	delayMicroseconds(delay);
 }
 
 
