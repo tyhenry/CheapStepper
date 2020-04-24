@@ -80,11 +80,11 @@ public:
 
 
 
-	void step (bool clockwise);
+	void step (bool clockwise, bool block = true);
 	// move 1 step clockwise or counter-clockwise
 
-	void stepCW () { step (true); } // move 1 step clockwise
-	void stepCCW () { step (false); } // move 1 step counter-clockwise
+	void stepCW (bool block = true) { step (true, block); } // move 1 step clockwise
+	void stepCCW (bool block = true) { step (false, block); } // move 1 step counter-clockwise
 
 	int getStep() { return stepN; } // returns current miniStep position
 	int getDelay() { return delay; } // returns current delay (microseconds)
