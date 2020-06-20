@@ -157,16 +157,17 @@ void CheapStepper::step(bool clockwise){
 
 	if (clockwise) seqCW();
 	else seqCCW();
-}
 
-void CheapStepper::off() {
-	for (int p=0; p<4; p++)
-		digitalWrite(pins[p], 0);
 	#if defined(ESP8266) || defined(ARDUINO_ESP8266_NODEMCU)
 		// return control to the system between the steps so that long series of those
 		// doesn't trigger watch dog restart on ESP
 		yield();
 	#endif
+}
+
+void CheapStepper::off() {
+	for (int p=0; p<4; p++)
+		digitalWrite(pins[p], 0);
 }
 
 
