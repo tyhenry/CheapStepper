@@ -29,8 +29,7 @@ Depending on whom you ask, the 28BYJ-48 motor has an internal gear ratio of eith
 or ~4076 (4075.7728) if the gear ratio is 63.68395:1  
   
 CheapStepper library defaults to 4096 mini-steps but you can call:  
-`CheapStepper::set4076StepMode()` to use 4076 steps
-or `CheapStepper::setTotalSteps(int numSteps)` to use a custom amount
+`CheapStepper::setTotalSteps(int numSteps)` to use a custom amount
 
 
 ### Power
