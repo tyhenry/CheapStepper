@@ -1,4 +1,4 @@
-# CheapStepper v0.2 #
+# CheapStepper v0.3 #
 ## An Arduino library for the 28BYJ-48 stepper motor  using ULN2003 driver board ##
 
 #### created by Tyler Henry, 6/2016 ####
