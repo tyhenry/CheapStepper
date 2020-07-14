@@ -13,8 +13,8 @@ CheapStepper	KEYWORD1
 #######################################
 
 setRpm			KEYWORD2
-set4076StepMode	KEYWORD2
-setTotalSteps	KEYWORD2
+setSpr			KEYWORD2
+isReady			KEYWORD2
 move			KEYWORD2
 moveTo			KEYWORD2
 moveDegrees		KEYWORD2
@@ -27,20 +27,8 @@ moveDegreesCW	KEYWORD2
 moveDegreesCCW	KEYWORD2
 moveToDegreeCW	KEYWORD2
 moveToDegreeCCW	KEYWORD2
-newMove			KEYWORD2
-newMoveTo		KEYWORD2
-newMoveDegrees	KEYWORD2
-newMoveToDegree	KEYWORD2
 run				KEYWORD2
 stop 			KEYWORD2
-newMoveCW		KEYWORD2
-newMoveCCW		KEYWORD2
-newMoveToCW		KEYWORD2
-newMoveToCCW	KEYWORD2
-newMoveDegreesCW	KEYWORD2
-newMoveDegreesCCW	KEYWORD2
-newMoveToDegreeCW	KEYWORD2
-newMoveToDegreeCCW	KEYWORD2
 step 			KEYWORD2
 stepCW			KEYWORD2
 stepCCW			KEYWORD2

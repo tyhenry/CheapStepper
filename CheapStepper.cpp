@@ -26,274 +26,135 @@
 #include "CheapStepper.h"
 
 
-CheapStepper::CheapStepper () : pins({8,9,10,11}) {
-	for (int pin=0; pin<4; pin++){
+CheapStepper::CheapStepper (int in1, int in2, int in3, int in4) 
+	: pins({in1,in2,in3,in4})
+	, direction(0)
+	, position(0)
+	, spr(4096)
+	, rpm(10)
+	, limitCW(UINT32_MAX)
+	, limitCCW(0)
+	, stepMask(1)
+	, lastStepTime(0)
+	, stepsLeft(0)
+{
+	for (int pin=0; pin<4; pin++) {
 		pinMode(pins[pin], OUTPUT);
+		digitalWrite(pins[pin], LOW);
 	}
 }
 
-CheapStepper::CheapStepper (int in1, int in2, int in3, int in4) : pins({in1,in2,in3,in4}) {
-	for (int pin=0; pin<4; pin++){
-		pinMode(pins[pin], OUTPUT);
-	}
-}
-
-void CheapStepper::setRpm (int rpm){
-
-	delay = calcDelay(rpm);
-}
-
-void CheapStepper::move (bool clockwise, int numSteps){
-
-	for (int n=0; n<numSteps; n++){
-		step(clockwise);
-	}
-}
-
-void CheapStepper::moveTo (bool clockwise, int toStep){
-
-	// keep to 0-(totalSteps-1) range
-	if (toStep >= totalSteps) toStep %= totalSteps;
-	else if (toStep < 0) {
-		toStep %= totalSteps; // returns negative if toStep not multiple of totalSteps
-		if (toStep < 0) toStep += totalSteps; // shift into 0-(totalSteps-1) range
-	}
-	while (stepN != toStep){
-		step(clockwise);
-	}
-}
-
-void CheapStepper::moveDegrees (bool clockwise, int deg){
-
-	int nSteps = (unsigned long) deg * totalSteps / 360;
-	move(clockwise, nSteps);
-}
-
-void CheapStepper::moveToDegree (bool clockwise, int deg){
-
-	// keep to 0-359 range
-	if (deg >= 360) deg %= 360;
-	else if (deg < 0) {
-		deg %= 360; // returns negative if deg not multiple of 360
-		if (deg < 0) deg += 360; // shift into 0-359 range
-	}
-
-	int toStep = deg * totalSteps / 360;
-	moveTo (clockwise, toStep);
-}
-
-
-// NON-BLOCKING MOVES
-
-void CheapStepper::newMove (bool clockwise, int numSteps){
-
-	// numSteps sign ignored
-	// stepsLeft signed positive if clockwise, neg if ccw
-
-	if (clockwise) stepsLeft = abs(numSteps);
-	else stepsLeft = -1 * abs(numSteps);
-
-	lastStepTime = micros();
-}
-
-void CheapStepper::newMoveTo (bool clockwise, int toStep){
-
-	// keep toStep in 0-(totalSteps-1) range
-	if (toStep >= totalSteps) toStep %= totalSteps;
-	else if (toStep < 0) {
-		toStep %= totalSteps; // returns negative if toStep not multiple of totalSteps
-		if (toStep < 0) toStep += totalSteps; // shift into 0-(totalSteps-1) range
-	}
-
-	if (clockwise) stepsLeft = abs(toStep - stepN);
-	// clockwise: simple diff, always pos
-	else stepsLeft = -1*(totalSteps - abs(toStep - stepN));
-	// counter-clockwise: totalSteps - diff, made neg
-
-	lastStepTime = micros();
-}
-
-void CheapStepper::newMoveDegrees (bool clockwise, int deg){
-
-	int nSteps = (unsigned long) deg * totalSteps / 360;
-	newMove (clockwise, nSteps);
-}
-
-void CheapStepper::newMoveToDegree (bool clockwise, int deg){
-
-	// keep to 0-359 range
-	if (deg >= 360) deg %= 360;
-	else if (deg < 0) {
-		deg %= 360; // returns negative if deg not multiple of 360
-		if (deg < 0) deg += 360; // shift into 0-359 range
-	}
-
-	int toStep = deg * totalSteps / 360;
-	newMoveTo (clockwise, toStep);
-}
-
-void CheapStepper::run(){
-
-	if (micros() - lastStepTime >= delay) { // if time for step
-		if (stepsLeft > 0) { // clockwise
-			stepCW();
-			stepsLeft--;
-		} else if (stepsLeft < 0){ // counter-clockwise
-			stepCCW();
-			stepsLeft++;
-		} 
-
+void CheapStepper::moveCW(uint32_t value)
+{
+	if (isReady()) {
+		direction = 1;
+		stepsLeft = value;
 		lastStepTime = micros();
 	}
 }
 
-void CheapStepper::stop(){
+void CheapStepper::moveCCW(uint32_t value)
+{
+	if (isReady()) {
+		direction = -1;
+		stepsLeft = value;
+		lastStepTime = micros();
+	}
+}
 
+void CheapStepper::moveDegreesCW(uint32_t deg)
+{
+	moveCW(uint64_t(deg) * spr / 360);
+}
+
+void CheapStepper::moveDegreesCCW(uint32_t deg)
+{
+	moveCCW(uint64_t(deg) * spr / 360);
+}
+
+void CheapStepper::moveTo(uint32_t value)
+{
+	if (value > position) {
+		moveCW(value - position);
+	} else if (value < position) {
+		moveCCW(position - value);
+	}
+}
+
+void CheapStepper::moveToDegree (uint32_t value)
+{
+	uint32_t currentValue = uint64_t(position) * 360 / spr;
+	if (value > currentValue) {
+		moveDegreesCW(value - currentValue);
+	} else if (value < currentValue) {
+		moveDegreesCCW(currentValue - value);
+	}
+}
+
+void CheapStepper::run(){
+	if (stepsLeft > 0) {
+		uint32_t currentTime = micros();
+		if ((currentTime - lastStepTime) >= delay) {
+			step();
+			stepsLeft--;
+			lastStepTime = currentTime;
+		}
+	}
+}
+
+void CheapStepper::stop()
+{
 	stepsLeft = 0;
 }
 
-
-void CheapStepper::step(bool clockwise){
-
-	if (clockwise) seqCW();
-	else seqCCW();
+void CheapStepper::off()
+{
+	for (int i=0; i<4; i++) digitalWrite(pins[i], 0);
 }
 
-void CheapStepper::off() {
-	for (int p=0; p<4; p++)
-		digitalWrite(pins[p], 0);
+void CheapStepper::stepCW() {
+	direction = 1;
+	step();
 }
 
-
-/////////////
-// PRIVATE //
-/////////////
-
-int CheapStepper::calcDelay (int rpm){
-
-	if (rpm < 6) return delay; // will overheat, no change
-	else if (rpm >= 24) return 600; // highest speed
-
-	unsigned long d = 60000000 / (totalSteps* (unsigned long) rpm);
-	// in range: 600-1465 microseconds (24-1 rpm)
-	return (int) d;
-
+void CheapStepper::stepCCW() {
+	direction = -1;
+	step();
 }
 
-int CheapStepper::calcRpm (int _delay){
+// PRIVATE
 
-	unsigned long rpm = 60000000 / (unsigned long) _delay / totalSteps;
-	return (int) rpm;
-	
+void CheapStepper::calcDelay()
+{
+	if (rpm < 6) return;   // will overheat, no change
+	if (rpm >= 24) return; // highest speed
+	delay = (uint64_t) 60000000 / ((uint64_t) rpm * (uint64_t) spr);
 }
 
-void CheapStepper::seqCW (){
-	seqN++;
-	if (seqN > 7) seqN = 0; // roll over to A seq
-	seq(seqN);
+void CheapStepper::step()
+{
+	const uint8_t pattern[4] = {
+		0b10000011, 
+		0b00111000,
+		0b00001110,
+		0b11100000
+	};
 
-	stepN++; // track miniSteps
-	if (stepN >= totalSteps){
-		stepN -=totalSteps; // keep stepN within 0-(totalSteps-1)
-	}
-}
-
-void CheapStepper::seqCCW (){
-	seqN--;
-	if (seqN < 0) seqN = 7; // roll over to DA seq
-	seq(seqN);
-
-	stepN--; // track miniSteps
-	if (stepN < 0){
-		stepN +=totalSteps; // keep stepN within 0-(totalSteps-1)
-	}
-}
-
-void CheapStepper::seq (int seqNum){
-
-	int pattern[4];
-	// A,B,C,D HIGH/LOW pattern to write to driver board
-	
-	switch(seqNum){
-		case 0:
-		{
-			pattern[0] = 1;
-			pattern[1] = 0;
-			pattern[2] = 0;
-			pattern[3] = 0;
-			break;
-		}
-		case 1:
-		{
-			pattern[0] = 1;
-			pattern[1] = 1;
-			pattern[2] = 0;
-			pattern[3] = 0;
-			break;
-		}
-		case 2:
-		{
-			pattern[0] = 0;
-			pattern[1] = 1;
-			pattern[2] = 0;
-			pattern[3] = 0;
-			break;
-		}
-		case 3:
-		{
-			pattern[0] = 0;
-			pattern[1] = 1;
-			pattern[2] = 1;
-			pattern[3] = 0;
-			break;
-		}	
-		case 4:
-		{
-			pattern[0] = 0;
-			pattern[1] = 0;
-			pattern[2] = 1;
-			pattern[3] = 0;
-			break;
-		}
-		case 5:
-		{
-			pattern[0] = 0;
-			pattern[1] = 0;
-			pattern[2] = 1;
-			pattern[3] = 1;
-			break;
-		}
-		case 6:
-		{
-			pattern[0] = 0;
-			pattern[1] = 0;
-			pattern[2] = 0;
-			pattern[3] = 1;
-			break;
-		}
-		case 7:
-		{
-			pattern[0] = 1;
-			pattern[1] = 0;
-			pattern[2] = 0;
-			pattern[3] = 1;
-			break;
-		}
-		default:
-		{
-			pattern[0] = 0;
-			pattern[1] = 0;
-			pattern[2] = 0;
-			pattern[3] = 0;
-			break;
-		}
-	}
+	position += direction;
+	if (position >= limitCW) return;
+	if (position <= limitCCW) return;
 
 	// write pattern to pins
-	for (int p=0; p<4; p++){
-		digitalWrite(pins[p], pattern[p]);
+	for (int i = 0; i < 4; i++)  digitalWrite(pins[i], pattern[i] & stepMask);
+	
+	// prepere the bitmask for the next step
+	if (direction == 1){
+		stepMask <<= 1;
+	} else if (direction == -1) {
+		stepMask >>= 1;
 	}
+	if (stepMask == 0) stepMask = 1;
+
+	//
 	delayMicroseconds(delay);
 }
-
-

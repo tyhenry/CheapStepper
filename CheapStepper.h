@@ -30,99 +30,64 @@ class CheapStepper
 {
 
 public: 
-	CheapStepper();
-	CheapStepper (int in1, int in2, int in3, int in4);
+	CheapStepper(int in1, int in2, int in3, int in4);
 
-	void setRpm (int rpm); // sets speed (10-24 rpm, hi-low torque)
+	// Rotations per minute
 	// <6 rpm blocked in code, may overheat
 	// 23-24rpm may skip
+	void setRpm(int value) {
+		rpm = value;
+		calcDelay();
+	}
 
-	void set4076StepMode() { totalSteps = 4076; }
-	void setTotalSteps (int numSteps) { totalSteps = numSteps; }
-	// allows custom # of steps (usually 4076)
+	// Steps per rotation
+	void setSpr(int value) {spr = value;}
 
-	// blocking! (pauses arduino until move is done)
-	void move (bool clockwise, int numSteps); // 4096 steps = 1 revolution
-	void moveTo (bool clockwise, int toStep); // move to specific step position
-	void moveDegrees (bool clockwise, int deg);
-	void moveToDegree (bool clockwise, int deg);
-
-	void moveCW (int numSteps) { move (true, numSteps); }
-	void moveCCW (int numSteps) { move (false, numSteps); }
-	void moveToCW (int toStep) { moveTo (true, toStep); }
-	void moveToCCW (int toStep) { moveTo (false, toStep); }
-	void moveDegreesCW (int deg) { moveDegrees (true, deg); }
-	void moveDegreesCCW (int deg) { moveDegrees (false, deg); }
-	void moveToDegreeCW (int deg) { moveToDegree (true, deg); }
-	void moveToDegreeCCW (int deg) { moveToDegree (false, deg); }
-
-
-	// non-blocking versions of move()
-	// call run() in loop to keep moving
-
-	void newMove (bool clockwise, int numSteps);
-	void newMoveTo (bool clockwise, int toStep);
-	void newMoveDegrees (bool clockwise, int deg);
-	void newMoveToDegree (bool clockwise, int deg);
+	void moveCW(uint32_t value);           // Move spesified steps clockwise
+	void moveCCW(uint32_t value);          // Move spesified steps counterclockwise
+	void moveDegreesCW(uint32_t value);    // 
+	void moveDegreesCCW(uint32_t value);   // 
+	void moveTo(uint32_t value);           // Move to spesified position clockwise
+	void moveToDegree(uint32_t value);     // 
 
 	void run();
 	void stop();
 	void off();
 
-	void newMoveCW(int numSteps) { newMove(true, numSteps); }
-	void newMoveCCW(int numSteps) { newMove(false, numSteps); }
-	void newMoveToCW(int toStep) { newMoveTo(true, toStep); }
-	void newMoveToCCW(int toStep) { newMoveTo(false, toStep); }
-	void newMoveDegreesCW(int deg) { newMoveDegrees(true, deg); }
-	void newMoveDegreesCCW(int deg) { newMoveDegrees(false, deg); }
-	void newMoveToDegreeCW(int deg) { newMoveToDegree(true, deg); }
-	void newMoveToDegreeCCW(int deg) { newMoveToDegree(false, deg); }
+	void stepCW();                         // move 1 step clockwise
+	void stepCCW();                        // move 1 step counter-clockwise
 
+	int getPosition()  {return position;}  // returns current miniStep position
+	int getDelay()     {return delay;}     // returns current delay (microseconds)
+	int getStepsLeft() {return stepsLeft;} // returns steps left in current move
 
-
-	void step (bool clockwise);
-	// move 1 step clockwise or counter-clockwise
-
-	void stepCW () { step (true); } // move 1 step clockwise
-	void stepCCW () { step (false); } // move 1 step counter-clockwise
-
-	int getStep() { return stepN; } // returns current miniStep position
-	int getDelay() { return delay; } // returns current delay (microseconds)
-	int getRpm() { return calcRpm(); } // returns current rpm
-	int getPin(int p) { 
-		if (p<4) return pins[p]; // returns pin #
-		return 0; // default 0
+	// returns true if moving done
+	bool isReady() const {
+		return stepsLeft == 0;
 	}
-	int getStepsLeft() { return stepsLeft; } // returns steps left in current move
+
+	// set virtual limit switches
+	void setLimits(uint32_t cw, uint32_t ccw) {
+		if (cw > ccw) {
+			limitCW = cw;
+			limitCCW = ccw;
+		}
+	}
 
 private:
-
-	int calcDelay(int rpm); // calcs microsecond step delay for given rpm
-	int calcRpm(int _delay); // calcs rpm for given delay in microseconds
-	int calcRpm(){
-		return calcRpm(delay); // calcs rpm from current delay
-	}
-
-	void seqCW();
-	void seqCCW();
-	void seq(int seqNum); // send specific sequence num to driver
-
-	int pins[4]; // defaults to pins {8,9,10,11} (in1,in2,in3,in4 on the driver board)
-
-	int stepN = 0; // keeps track of step position
-	// 0-4095 (4096 mini-steps / revolution) or maybe 4076...
-	int totalSteps = 4096;
-
-	int delay = 900; // microsecond delay between steps
-	// 900 ~= 16.25 rpm
-	// low speed (high torque) = 1465 ~= 1 rpm
-	// high speed (low torque) = 600 ~=  24 rpm
-
-	int seqN = -1; // keeps track of sequence number
-
-	// variables for non-blocking moves:
-	unsigned long lastStepTime; // time in microseconds that last step happened
-	int stepsLeft = 0; // steps left to move, neg for counter-clockwise
+	int pins[4];            // defaults to pins {8,9,10,11} (in1,in2,in3,in4 on the driver board)
+	int direction;          // rotation direction
+	uint32_t position;      // current position in steps
+	uint16_t spr;           // steps per revolution
+	uint16_t rpm;           // revolutions per minute
+	int32_t limitCW;        // virtual limit switch for CW
+	int32_t limitCCW;       // virtual limit switch for CCW
+	uint8_t stepMask;       // microstep mask
+	uint32_t lastStepTime;  // time in microseconds that last step happened
+	uint32_t stepsLeft;     // steps left to move, neg for counter-clockwise
+	int delay;              // microsecond delay between steps
+	void calcDelay();       // calcs microsecond step delay for given rpm
+	void step();            // send step sequence to driver
 
 };
 
