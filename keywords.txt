@@ -14,29 +14,24 @@ CheapStepper	KEYWORD1
 
 setRpm			KEYWORD2
 setSpr			KEYWORD2
-isReady			KEYWORD2
-move			KEYWORD2
-moveTo			KEYWORD2
-moveDegrees		KEYWORD2
-moveToDegree	KEYWORD2
 moveCW			KEYWORD2
 moveCCW			KEYWORD2
-moveToCW		KEYWORD2
-moveToCCW		KEYWORD2
+moveTo			KEYWORD2
 moveDegreesCW	KEYWORD2
 moveDegreesCCW	KEYWORD2
-moveToDegreeCW	KEYWORD2
-moveToDegreeCCW	KEYWORD2
+moveToDegree	KEYWORD2
 run				KEYWORD2
 stop 			KEYWORD2
 step 			KEYWORD2
 stepCW			KEYWORD2
 stepCCW			KEYWORD2
-getStep			KEYWORD2
+getPosition		KEYWORD2
 getDelay		KEYWORD2
-getRpm			KEYWORD2
-getPin			KEYWORD2
 getStepsLeft	KEYWORD2
+getRpm			KEYWORD2
+getSpr			KEYWORD2
+isReady			KEYWORD2
+setLimits		KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

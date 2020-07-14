@@ -1,26 +1,3 @@
-/*  CheapStepper.h - 
-	v0.2
-	Library for the 28BYJ-48 stepper motor, using ULN2003 driver board
-	https://arduino-info.wikispaces.com/SmallSteppers
-
-	Library written by Tyler Henry, 6/2016
-
-	uses 8-step sequence: A-AB-B-BC-C-CD-D-DA
-
-	motor has gear ratio of either:
-		64:1 (per manufacturer specs)
-		or 
-		63.68395:1 measured
-			(see: http://forum.arduino.cc/index.php?topic=71964.15)
-	* 64 steps per internal motor rev
-	= 
-
-	4096 total mini-steps / revolution
-	or ~4076 (4075.7728) depending on exact gear ratio
-
-	assumes 5v power source for rpm calc
-*/
-
 #ifndef CHEAPSTEPPER_H
 #define CHEAPSTEPPER_H
 
@@ -57,9 +34,11 @@ public:
 	void stepCW();                         // move 1 step clockwise
 	void stepCCW();                        // move 1 step counter-clockwise
 
-	int getPosition()  {return position;}  // returns current miniStep position
-	int getDelay()     {return delay;}     // returns current delay (microseconds)
-	int getStepsLeft() {return stepsLeft;} // returns steps left in current move
+	int getPosition()  const {return position;}  // returns current miniStep position
+	int getDelay()     const {return delay;}     // returns current delay (microseconds)
+	int getStepsLeft() const {return stepsLeft;} // returns steps left in current move
+	int getRpm()       const {return rpm;}
+	int getSpr()       const {return spr;}
 
 	// returns true if moving done
 	bool isReady() const {

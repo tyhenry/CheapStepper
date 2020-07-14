@@ -32,18 +32,21 @@ void loop() {
 			stepper.moveDegreesCW(90);
 			seq = 1;
 			break;
+		
 		case 1:
-     Serial.println("Move CCW 90");
+			Serial.println("Move CCW 90");
 			stepper.moveDegreesCCW(90);
 			seq = 2;
 			break;
+		
 		case 2:
-     Serial.println("Move CW 360");
+			Serial.println("Move CW 360");
 			stepper.moveDegreesCW(360);
 			seq = 3;
 			break;
 		case 3:
-     Serial.println("Stop");
+			
+			Serial.println("Stop");
 			stepper.stop();
 			seq = 4;
 	}
