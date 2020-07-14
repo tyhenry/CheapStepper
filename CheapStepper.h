@@ -74,6 +74,8 @@ public:
 		}
 	}
 
+	uint16_t interval() const {return delay;}
+
 private:
 	int pins[4];            // defaults to pins {8,9,10,11} (in1,in2,in3,in4 on the driver board)
 	int direction;          // rotation direction
