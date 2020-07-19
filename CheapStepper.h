@@ -67,6 +67,7 @@ private:
 	uint32_t lastStepTime;  // time in microseconds that last step happened
 	uint32_t stepsLeft;     // steps left to move, neg for counter-clockwise
 	int delay;              // microsecond delay between steps
+	bool isStopped;         // 
 	void calcDelay();       // calcs microsecond step delay for given rpm
 	void step();            // send step sequence to driver
 

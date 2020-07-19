@@ -12,16 +12,20 @@ CheapStepper::CheapStepper (int in1, int in2, int in3, int in4)
 	, stepMask(1)
 	, lastStepTime(0)
 	, stepsLeft(0)
+	, isStopped(false)
 {
 	for (int pin=0; pin<4; pin++) {
 		pinMode(pins[pin], OUTPUT);
 		digitalWrite(pins[pin], LOW);
 	}
+
+	off();
 }
 
 void CheapStepper::moveCW(uint32_t value)
 {
 	if (isReady()) {
+		isStopped = false;
 		direction = 1;
 		stepsLeft = value;
 		lastStepTime = micros();
@@ -31,6 +35,7 @@ void CheapStepper::moveCW(uint32_t value)
 void CheapStepper::moveCCW(uint32_t value)
 {
 	if (isReady()) {
+		isStopped = false;
 		direction = -1;
 		stepsLeft = value;
 		lastStepTime = micros();
@@ -67,12 +72,14 @@ void CheapStepper::moveToDegree (uint32_t value)
 }
 
 void CheapStepper::run(){
-	if (stepsLeft > 0) {
-		uint32_t currentTime = micros();
-		if ((currentTime - lastStepTime) >= delay) {
+	uint32_t currentTime = micros();
+	if ((currentTime - lastStepTime) >= delay) {
+		if (stepsLeft > 0) {
 			step();
 			stepsLeft--;
 			lastStepTime = currentTime;
+		} else if (!isStopped) {
+			off();
 		}
 	}
 }
@@ -84,6 +91,7 @@ void CheapStepper::stop()
 
 void CheapStepper::off()
 {
+	isStopped = true;
 	for (int i=0; i<4; i++) digitalWrite(pins[i], 0);
 }
 
