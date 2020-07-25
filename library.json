@@ -6,7 +6,8 @@
 	"repository":
 	{
 	  "type": "git",
-	  "url": "https://github.com/kolod/CheapStepper.git"
+	  "url": "https://github.com/kolod/CheapStepper.git",
+	  "branch": "PlatformIO"
 	},
 	"authors":
 	[
@@ -23,8 +24,22 @@
 			"maintainer": true
 		}
 	],
-	"license": "GPLv3",
+	"license": "GPL-3.0-or-later",
 	"homepage": "https://github.com/kolod/CheapStepper",
-	"frameworks": "*",
-	"platforms": "*"
+	"export": {
+		"exclude": [
+			"extra/*"
+		]
+	},
+	"frameworks": "arduino",
+	"platforms": "*",
+	"dependencies": [
+		{
+			"name": "uTimerLib",
+			"authors":
+			[
+				"Naguissa <naguissa@foroelectro.net>"
+			]
+		}
+	]
 }
