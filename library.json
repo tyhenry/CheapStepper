@@ -1,0 +1,30 @@
+{
+	"name": "Cheap Stepper",
+	"version": "0.3.0",
+	"description": "An Arduino library for the 28BYJ-48 stepper motor using ULN2003 driver board",
+	"keywords": "stepper, motor, ULN2003",
+	"repository":
+	{
+	  "type": "git",
+	  "url": "https://github.com/kolod/CheapStepper.git"
+	},
+	"authors":
+	[
+		{
+			"name": "Tyler Henry",
+			"url": "http://www.tylerhenry.com"
+		}, {
+			"name": "Franz Wernnike",
+			"url": "https://github.com/WerFra"
+		}, {
+			"name": "Aleksandr Kolodkin",
+			"email": "alexandr.kolodkin@gmail.com",
+			"url": "https://github.com/kolod/",
+			"maintainer": true
+		}
+	],
+	"license": "GPLv3",
+	"homepage": "https://github.com/kolod/CheapStepper",
+	"frameworks": "*",
+	"platforms": "*"
+}
