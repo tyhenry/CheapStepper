@@ -41,6 +41,7 @@ env:
 install:
     - pip install -U platformio
     - platformio lib install "uTimerLib"
+    - platformio lib install "Ticker@1.0"
     - platformio update
 
 script:
