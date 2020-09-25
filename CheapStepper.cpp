@@ -166,7 +166,10 @@ void CheapStepper::step(bool clockwise){
 	// return control to the system between the steps so that long series of those
 	// doesn't trigger watch dog restart on ESP
 	if (millis() - lastYieldTime >= YIELD_TIME) 
+	{
 		yield();
+		lastYieldTime = millis();
+	}
 }
 
 void CheapStepper::off() {
