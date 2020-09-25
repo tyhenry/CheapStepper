@@ -25,6 +25,11 @@
 #include "Arduino.h"
 #include "CheapStepper.h"
 
+#if defined(ESP8266) || defined(ARDUINO_ESP8266_NODEMCU)
+	#define YIELD_TIME 1000 // Source https://www.sigmdel.ca/michel/program/esp8266/arduino/watchdogs_en.html#ESP8266_WDT_TIMEOUT
+#else
+	#define YIELD_TIME (0UL - 1UL) // Large number to only call it rarely
+#endif
 
 CheapStepper::CheapStepper () : pins({8,9,10,11}) {
 	for (int pin=0; pin<4; pin++){
@@ -158,11 +163,10 @@ void CheapStepper::step(bool clockwise){
 	if (clockwise) seqCW();
 	else seqCCW();
 
-	#if defined(ESP8266) || defined(ARDUINO_ESP8266_NODEMCU)
-		// return control to the system between the steps so that long series of those
-		// doesn't trigger watch dog restart on ESP
+	// return control to the system between the steps so that long series of those
+	// doesn't trigger watch dog restart on ESP
+	if (millis() - lastYieldTime >= YIELD_TIME) 
 		yield();
-	#endif
 }
 
 void CheapStepper::off() {
