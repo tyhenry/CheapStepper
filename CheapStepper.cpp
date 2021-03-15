@@ -43,6 +43,13 @@ void CheapStepper::setRpm (int rpm){
 	delay = calcDelay(rpm);
 }
 
+void CheapStepper::setDelay (int newDelay){
+	#ifndef IGNORE_STEPPER_LIMITS
+	newDelay = min(max(newDelay, 600), 1465); 
+	#endif
+	delay = newDelay
+}
+
 void CheapStepper::move (bool clockwise, int numSteps){
 
 	for (int n=0; n<numSteps; n++){
@@ -170,10 +177,11 @@ void CheapStepper::off() {
 /////////////
 
 int CheapStepper::calcDelay (int rpm){
-
+	#ifndef IGNORE_STEPPER_LIMITS
 	if (rpm < 6) return delay; // will overheat, no change
 	else if (rpm >= 24) return 600; // highest speed
-
+	#endif
+	
 	unsigned long d = 60000000 / (totalSteps* (unsigned long) rpm);
 	// in range: 600-1465 microseconds (24-1 rpm)
 	return (int) d;
