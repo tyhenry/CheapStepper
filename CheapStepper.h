@@ -36,6 +36,7 @@ public:
 	void setRpm (int rpm); // sets speed (10-24 rpm, hi-low torque)
 	// <6 rpm blocked in code, may overheat
 	// 23-24rpm may skip
+	void setDelay (int delay); // Sets the step delay. setRpm is preferred
 
 	void set4076StepMode() { totalSteps = 4076; }
 	void setTotalSteps (int numSteps) { totalSteps = numSteps; }
