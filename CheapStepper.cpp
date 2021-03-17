@@ -170,9 +170,10 @@ void CheapStepper::off() {
 /////////////
 
 int CheapStepper::calcDelay (int rpm){
-
+	#ifndef IGNORE_LIMITS
 	if (rpm < 6) return delay; // will overheat, no change
 	else if (rpm >= 24) return 600; // highest speed
+	#endif
 
 	unsigned long d = 60000000 / (totalSteps* (unsigned long) rpm);
 	// in range: 600-1465 microseconds (24-1 rpm)
